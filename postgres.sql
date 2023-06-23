@@ -1,1 +1,1 @@
-CREATE DATABASE fincheck; 
+CREATE DATABASE fincheck;
