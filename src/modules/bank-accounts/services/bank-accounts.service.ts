@@ -1,11 +1,16 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateBankAccountDto } from './dto/create-bank-account.dto';
-import { UpdateBankAccountDto } from './dto/update-bank-account.dto';
+import { CreateBankAccountDto } from '../dto/create-bank-account.dto';
+import { UpdateBankAccountDto } from '../dto/update-bank-account.dto';
 import { BankAccountsRepository } from 'src/shared/database/repositories/bank-accounts.repositories';
+import { ValidadeBankAccountOwnershipService } from './validate-bank-account-ownership.service';
 
 @Injectable()
 export class BankAccountsService {
-  constructor(private readonly bankAccountsRepo: BankAccountsRepository) { }
+  constructor(
+    private readonly bankAccountsRepo: BankAccountsRepository,
+    private readonly validateService: ValidadeBankAccountOwnershipService
+  ) { }
+
 
   create(userId: string, createBankAccountDto: CreateBankAccountDto) {
     const { name, initialBalance, type, color } = createBankAccountDto
@@ -33,16 +38,7 @@ export class BankAccountsService {
     bankAccountId: string,
     updateBankAccountDto: UpdateBankAccountDto
   ) {
-    const isOwner = await this.bankAccountsRepo.findFirst({
-      where: {
-        id: bankAccountId,
-        userId
-      }
-    })
-
-    if (!isOwner) {
-      throw new NotFoundException('Bank account not found.')
-    }
+    await this.validateService.validate(userId, bankAccountId)
 
     const { name, initialBalance, type, color } = updateBankAccountDto
 
@@ -59,18 +55,11 @@ export class BankAccountsService {
     })
   }
 
-  async remove(userId: string,
-    bankAccountId: string,) {
-    const isOwner = await this.bankAccountsRepo.findFirst({
-      where: {
-        id: bankAccountId,
-        userId
-      }
-    })
-
-    if (!isOwner) {
-      throw new NotFoundException('Bank account not found.')
-    }
+  async remove(
+    userId: string,
+    bankAccountId: string
+  ) {
+    await this.validateService.validate(userId, bankAccountId)
 
     await this.bankAccountsRepo.delete({
       where: {
