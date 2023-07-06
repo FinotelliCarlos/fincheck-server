@@ -1,8 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, ParseUUIDPipe, HttpCode } from '@nestjs/common';
-import { BankAccountsService } from './services/bank-accounts.service';
+import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Post, Put } from '@nestjs/common';
+import { ActiveUserId } from 'src/shared/decorators/active-user-id.decorator';
 import { CreateBankAccountDto } from './dto/create-bank-account.dto';
 import { UpdateBankAccountDto } from './dto/update-bank-account.dto';
-import { ActiveUserId } from 'src/shared/decorators/active-user-id.decorator';
+import { BankAccountsService } from './services/bank-accounts.service';
 
 @Controller('bank-accounts')
 export class BankAccountsController {

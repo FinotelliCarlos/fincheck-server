@@ -1,14 +1,14 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { BankAccountsRepository } from 'src/shared/database/repositories/bank-accounts.repositories';
 import { CreateBankAccountDto } from '../dto/create-bank-account.dto';
 import { UpdateBankAccountDto } from '../dto/update-bank-account.dto';
-import { BankAccountsRepository } from 'src/shared/database/repositories/bank-accounts.repositories';
-import { ValidadeBankAccountOwnershipService } from './validate-bank-account-ownership.service';
+import { ValidateBankAccountOwnershipService } from './validate-bank-account-ownership.service';
 
 @Injectable()
 export class BankAccountsService {
   constructor(
     private readonly bankAccountsRepo: BankAccountsRepository,
-    private readonly validateService: ValidadeBankAccountOwnershipService
+    private readonly validateService: ValidateBankAccountOwnershipService
   ) { }
 
 
